@@ -78,7 +78,7 @@ public class CreateTourActivity extends AppCompatActivity {
     }
 
     private void getLocation(){
-        String url = "http://192.168.1.241/travel-go/api/getLocation.php";
+        String url = "https://3gomedia.com/travel-go/api/getLocation.php";
 
         JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.GET, url, null
                 , new Response.Listener<JSONObject>() {

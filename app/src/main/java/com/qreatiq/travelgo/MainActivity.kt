@@ -107,6 +107,11 @@ class MainActivity : AppCompatActivity(),
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    override fun onBackPressed() {
+        finish()
+        super.onBackPressed()
+    }
+
 //    override fun onBackPressed() {
 //        if(fragmentManager.backStackEntryCount > 0){
 //            fragmentManager.popBackStack()

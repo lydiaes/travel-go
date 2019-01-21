@@ -457,7 +457,7 @@ class HomeFragment : Fragment() {
 	}
 
 	private fun getLocation(){
-		val url = "http://192.168.1.241/travel-go/api/getPlaces.php"
+		val url = "https://3gomedia.com/travel-go/api/getPlaces.php"
 
 		val jsonObjectRequest = object: JsonObjectRequest(
 			Request.Method.GET, url, null, Response.Listener { response ->

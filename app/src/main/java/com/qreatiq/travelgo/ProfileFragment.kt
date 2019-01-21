@@ -23,6 +23,8 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.util.HashMap
 import android.R.id.edit
+import android.app.Activity
+import android.view.inputmethod.InputMethodManager
 import com.facebook.AccessToken
 import com.facebook.FacebookSdk
 import com.facebook.FacebookSdk.getApplicationContext
@@ -104,6 +106,13 @@ class ProfileFragment : Fragment() {
 
         save!!.setOnClickListener(View.OnClickListener {
             saveData()
+            name!!.setFocusable(false);
+            email!!.setFocusable(false);
+            password!!.setFocusable(false);
+            confirm_password!!.setFocusable(false);
+            phone!!.setFocusable(false);
+            tour_name!!.setFocusable(false);
+            tour_description!!.setFocusable(false);
         })
 
         create_package!!.setOnClickListener(View.OnClickListener {
@@ -114,27 +123,31 @@ class ProfileFragment : Fragment() {
         logout = view!!.findViewById(R.id.logoutBtn) as Button
 
         logout!!.setOnClickListener{
+
             user = activity!!.getSharedPreferences("user_id", Context.MODE_PRIVATE)
             editor = user!!.edit()
-            editor!!.clear().apply();
+            editor!!.clear().apply()
 
             FacebookSdk.sdkInitialize(activity)
             LoginManager.getInstance().logOut()
 
             val intent = Intent(activity, LoginMenuActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
+
         }
     }
 
     fun getData(){
-        val url = "http://192.168.1.241/travel-go/api/profile.php"
+        val url = "https://3gomedia.com/travel-go/api/profile.php"
 
-        val json = JSONObject()
-        json.put("id",userID)
+        val jsonObject = JSONObject()
+        jsonObject.put("id",userID)
 
         val jsonObjectRequest = object :
-            JsonObjectRequest(Request.Method.POST, url, json,
+            JsonObjectRequest(Request.Method.POST, url, jsonObject,
                 Response.Listener { response ->
+
                     name!!.setText(response.getJSONObject("user").getString("name"))
                     email!!.setText(response.getJSONObject("user").getString("email"))
                     phone!!.setText(response.getJSONObject("user").getString("phone"))
@@ -157,7 +170,7 @@ class ProfileFragment : Fragment() {
 
 
     fun saveData(){
-        val url = "http://192.168.1.241/travel-go/api/saveProfile.php"
+        val url = "https://3gomedia.com/travel-go/api/saveProfile.php"
 
         val json = JSONObject()
         json.put("name",name!!.text.toString())
@@ -167,7 +180,6 @@ class ProfileFragment : Fragment() {
         json.put("tour_name",tour_name!!.text.toString())
         json.put("tour_description",tour_description!!.text.toString())
         json.put("id",userID)
-        Log.d("data",json.toString())
 
         val jsonObjectRequest = object :
             JsonObjectRequest(Request.Method.POST, url, json,
@@ -241,4 +253,5 @@ class ProfileFragment : Fragment() {
                 }
             }
     }
+
 }

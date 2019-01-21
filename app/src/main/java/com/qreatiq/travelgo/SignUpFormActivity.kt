@@ -1,5 +1,6 @@
 package com.qreatiq.travelgo
 
+import android.app.Activity
 import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -11,6 +12,7 @@ import java.util.*
 import android.content.Intent
 import android.content.SharedPreferences
 import android.util.Log
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
 import com.android.volley.AuthFailureError
@@ -86,7 +88,7 @@ class SignUpFormActivity : AppCompatActivity() {
             e.printStackTrace()
         }
 
-        val url = "http://192.168.1.241/travel-go/api/login.php"
+        val url = "https://3gomedia.com/travel-go/api/login.php"
 
         var jsonObject = JSONObject()
         jsonObject.put("email", email)
@@ -128,7 +130,7 @@ class SignUpFormActivity : AppCompatActivity() {
             Toast.makeText(this, "Password Not Match!", Toast.LENGTH_LONG).show()
         }
         else{
-            val url = "http://192.168.1.241/travel-go/api/signup.php"
+            val url = "https://3gomedia.com/travel-go/api/signup.php"
 
             var jsonObject = JSONObject()
             jsonObject.put("email", emailInput.text.toString())
@@ -159,6 +161,10 @@ class SignUpFormActivity : AppCompatActivity() {
             queue!!.add(jsonObjectRequest)
 
         }
+    }
 
+    fun hideKeyboard(view: View) {
+        val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 }

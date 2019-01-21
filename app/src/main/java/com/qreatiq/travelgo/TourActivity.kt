@@ -119,7 +119,7 @@ class TourActivity : AppCompatActivity() {
 //    }
 
     fun getData(){
-        val url = "http://192.168.1.241/travel-go/api/getDetailPackage.php?id="+id
+        val url = "https://3gomedia.com/travel-go/api/getDetailPackage.php?id="+id
 
 
         val jsonObjectRequest = object : JsonObjectRequest(

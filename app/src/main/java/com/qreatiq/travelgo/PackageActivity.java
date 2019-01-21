@@ -1,7 +1,12 @@
 package com.qreatiq.travelgo;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.ArrayAdapter;
@@ -13,6 +18,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.qreatiq.travelgo.adapters.FindTourAdapter;
 import com.qreatiq.travelgo.adapters.PackageAdapter;
 
 import org.json.JSONException;
@@ -30,6 +36,9 @@ public class PackageActivity extends AppCompatActivity {
 
     RequestQueue queue;
 
+    SharedPreferences user;
+    String userID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +46,15 @@ public class PackageActivity extends AppCompatActivity {
 
         recyclerView = (RecyclerView) findViewById(R.id.list);
         adapter=new PackageAdapter(array);
+
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         recyclerView.setAdapter(adapter);
+
+        user = this.getSharedPreferences("user_id", Context.MODE_PRIVATE);
+        userID = user.getString("user_id", "Not Found");
 
         queue = Volley.newRequestQueue(this);
 
@@ -45,13 +62,14 @@ public class PackageActivity extends AppCompatActivity {
     }
 
     private void getData(){
-        String url = "http://192.168.1.241/travel-go/api/getPackage.php";
+        String url = "https://3gomedia.com/travel-go/api/getPackageUser.php?id="+userID;
 
         JsonObjectRequest jsonObjectRequest=new JsonObjectRequest(Request.Method.GET, url, null
                 , new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
+                    Log.d("packageTour", response.toString());
                     for(int x=0;x<response.getJSONArray("package").length();x++) {
                         JSONObject package1=response.getJSONArray("package").getJSONObject(x);
                         JSONObject json=new JSONObject();

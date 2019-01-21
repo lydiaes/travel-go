@@ -9,6 +9,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.RecyclerView
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -102,15 +103,38 @@ class FindTourFragment : Fragment() {
 //                    .addToBackStack(R.id.navigation_home.toString()).commit();
         }
 
-        cities.add("Bali")
-        cities.add("Jakarta")
-        cities.add("Medan")
-        cities.add("Pekanbaru")
-        cities.add("Aceh")
-        cities.add("Surabaya")
+        val url = "https://3gomedia.com/travel-go/api/getPlaces.php"
 
-        val adapterSpinner = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, cities)
-        spinner.adapter = adapterSpinner
+        val jsonObjectRequest = object: JsonObjectRequest(
+            Request.Method.GET, url, null, Response.Listener { response ->
+                for(location in 0..response.getJSONArray("data").length()-1){
+                    cities.add(response.getJSONArray("data").getJSONObject(location).getString("name"))
+                }
+
+                val adapterSpinner = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, cities)
+                spinner.adapter = adapterSpinner
+
+                Log.d("cityGet", cities.toString())
+            },
+            Response.ErrorListener { error -> Log.e("error", error.message) })
+        {
+            @Throws(AuthFailureError::class)
+            override fun getHeaders(): Map<String, String> {
+                val header = HashMap<String, String>()
+                header ["Content-Type"] = "application/json"
+                return header
+            }
+        }
+
+        queue!!.add(jsonObjectRequest)
+//        cities.add("Bali")
+//        cities.add("Jakarta")
+//        cities.add("Medan")
+//        cities.add("Pekanbaru")
+//        cities.add("Aceh")
+//        cities.add("Surabaya")
+//        val adapterSpinner = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, cities)
+//        spinner.adapter = adapterSpinner
 
         prefs = activity!!.getSharedPreferences("user_id", Context.MODE_PRIVATE)
         editor = prefs!!.edit()
@@ -181,7 +205,7 @@ class FindTourFragment : Fragment() {
     }
 
     fun getData(){
-        val url = "http://192.168.1.241/travel-go/api/getPackage.php"
+        val url = "https://3gomedia.com/travel-go/api/getPackage.php"
 
         val json = JSONObject()
         json.put("location",cities.get(spinner.selectedItemPosition))
@@ -190,6 +214,7 @@ class FindTourFragment : Fragment() {
         val jsonObjectRequest = object : JsonObjectRequest(
                 Request.Method.POST, url, json,
                 Response.Listener { response ->
+//                    Log.d("responseData", response.toString())
                     findTours.clear()
                     for(x in 0..response.getJSONArray("user").length()-1){
                         var data = response.getJSONArray("user").getJSONObject(x)

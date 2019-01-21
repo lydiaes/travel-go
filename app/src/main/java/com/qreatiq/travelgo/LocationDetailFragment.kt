@@ -66,7 +66,7 @@ class LocationDetailFragment : AppCompatActivity() {
 
         val findTourButton = findViewById<Button>(R.id.button5)
 
-        val url = "http://192.168.1.241/travel-go/api/getPlaceDetail.php?id="+idLocation
+        val url = "https://3gomedia.com/travel-go/api/getPlaceDetail.php?id="+idLocation
 
         locationName = findViewById(R.id.textView6) as TextView
         locationDesc = findViewById(R.id.textView3) as TextView

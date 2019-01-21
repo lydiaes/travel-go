@@ -26,6 +26,7 @@ class SplashActivity : AppCompatActivity() {
     private fun route(){
 
         var intent: Intent? = null
+//        intent = Intent(this, LoginMenuActivity::class.java);
         if(userID.equals("Data Not Found")){
             intent = Intent(this, LoginMenuActivity::class.java);
         }

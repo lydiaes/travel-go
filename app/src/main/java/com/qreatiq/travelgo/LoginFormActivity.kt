@@ -1,5 +1,6 @@
 package com.qreatiq.travelgo
 
+import android.app.Activity
 import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -11,6 +12,7 @@ import java.util.*
 import android.content.Intent
 import android.content.SharedPreferences
 import android.util.Log
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.Toast
 import com.android.volley.AuthFailureError
@@ -33,6 +35,13 @@ class LoginFormActivity : AppCompatActivity() {
 
 	private var saveLogin: SharedPreferences? = null
 	private var editor: SharedPreferences.Editor? = null
+
+
+	private var user: SharedPreferences? = null
+	private var userID: String? = null
+
+	private var emailInput:EditText? = null
+	private var passwordInput:EditText? = null
 
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,13 +95,11 @@ class LoginFormActivity : AppCompatActivity() {
             e.printStackTrace()
         }
 
-		val url = "http://192.168.1.241/travel-go/api/login.php"
+		val url = "https://3gomedia.com/travel-go/api/login.php"
 
 		var jsonObject = JSONObject()
 		jsonObject.put("email", email)
 		jsonObject.put("first_name", first_name)
-
-		Log.d("facebookResponse", jsonObject.toString())
 
 		val jsonObjectRequest = object:JsonObjectRequest(Request.Method.POST, url, jsonObject, Response.Listener { response ->
 
@@ -126,14 +133,14 @@ class LoginFormActivity : AppCompatActivity() {
 	}
 
 	fun goToMain(v : View){
-		val emailInput = findViewById<View>(R.id.editText3) as EditText
-		val passwordInput = findViewById<View>(R.id.editText4) as EditText
+		emailInput = findViewById<View>(R.id.editText3) as EditText
+		passwordInput = findViewById<View>(R.id.editText4) as EditText
 
-		val url = "http://192.168.1.241/travel-go/api/login.php"
+		val url = "https://3gomedia.com/travel-go/api/login.php"
 
 		var jsonObject = JSONObject()
-		jsonObject.put("email", emailInput.text.toString())
-		jsonObject.put("password", passwordInput.text.toString())
+		jsonObject.put("email", emailInput!!.text.toString())
+		jsonObject.put("password", passwordInput!!.text.toString())
 
 
 //		val jsonObjectRequest = object:JsonObjectRequest(Request.Method.POST, url, jsonObject, Response.Listener { response ->
@@ -170,5 +177,10 @@ class LoginFormActivity : AppCompatActivity() {
 		}
 
 		queue!!.add(jsonObjectRequest)
+	}
+
+	fun hideKeyboard(view: View) {
+		val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+		inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
 	}
 }
